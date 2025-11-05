@@ -1,16 +1,66 @@
----
-# handlers file for post-install
+# Install NTP and utility packages on Ubuntu
+- name: Install NTP on Ubuntu
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+  loop:
+    - ntp
+    - wget
+    - git
+    - zip
+    - unzip
 
-- name: reStart NTP service on Ubuntu
+# Install NTP and utilities on Red Hat
+- name: Install NTP on Red Hat
+  yum:
+    name: "{{ item }}"
+    state: present
+  when: ansible_distribution == "RedHat"
+  loop:
+    - chrony
+    - wget
+    - git
+    - zip
+    - unzip
+
+# Start NTP services
+- name: Start and enable NTP service on Ubuntu
   service:
     name: ntp
-    state: restarted
+    state: started
     enabled: yes
   when: ansible_distribution == "Ubuntu"
 
-- name: reStart NTP service on Red Hat
+- name: Start and enable NTP service on Red Hat
   service:
     name: chronyd
-    state: restarted
+    state: started
     enabled: yes
   when: ansible_distribution == "RedHat"
+
+# Add system banner
+- name: Banner file
+  copy:
+    content: '# This server managed by Ansible. Do not make manual changes!'
+    dest: /etc/motd
+
+# Deploy NTP configuration
+- name: Deploy NTP agent conf on Red Hat
+  template:
+    src: ntpconf_redhat.j2
+    dest: /etc/chrony.conf
+    backup: yes
+  when: ansible_distribution == "RedHat"
+  notify:
+    - reStart NTP service on Red Hat
+
+- name: Deploy NTP agent conf on Ubuntu
+  template:
+    src: ntpconf_ubuntu.j2
+    dest: /etc/ntpsec/ntp.conf
+    backup: yes
+  when: ansible_distribution == "Ubuntu"
+  notify:
+    - reStart NTP service on Ubuntu

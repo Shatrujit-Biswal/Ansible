@@ -1,16 +1,19 @@
 ---
+# Apply post-install setup on all servers
 - name: Provision all servers
   hosts: all
   become: yes
   roles:
     - post-install 
 
+# Setup Apache web servers
 - name: Provision web servers
   hosts: webservers
   become: yes
   roles:
     - webserver
 
+# Setup MariaDB database servers
 - name: Provision DB servers
   hosts: dbservers
   become: yes

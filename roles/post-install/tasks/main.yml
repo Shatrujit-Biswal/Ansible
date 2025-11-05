@@ -1,7 +1,7 @@
----
+# Install NTP and utility packages on Ubuntu
 - name: Install NTP on Ubuntu
   apt:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
     update_cache: yes
   when: ansible_distribution == "Ubuntu"
@@ -12,9 +12,10 @@
     - zip
     - unzip
 
+# Install NTP and utilities on Red Hat
 - name: Install NTP on Red Hat
   yum:
-    name: "{{item}}"
+    name: "{{ item }}"
     state: present
   when: ansible_distribution == "RedHat"
   loop:
@@ -24,6 +25,7 @@
     - zip
     - unzip
 
+# Start NTP services
 - name: Start and enable NTP service on Ubuntu
   service:
     name: ntp
@@ -38,12 +40,14 @@
     enabled: yes
   when: ansible_distribution == "RedHat"
 
+# Add system banner
 - name: Banner file
   copy:
-    content: '#This server manage my Ansible. No manual changes'
+    content: '# This server managed by Ansible. Do not make manual changes!'
     dest: /etc/motd
 
-- name: Deploy ntp agent conf on redhat
+# Deploy NTP configuration
+- name: Deploy NTP agent conf on Red Hat
   template:
     src: ntpconf_redhat.j2
     dest: /etc/chrony.conf
@@ -52,7 +56,7 @@
   notify:
     - reStart NTP service on Red Hat
 
-- name: Deploy ntp agent conf on "Ubuntu"
+- name: Deploy NTP agent conf on Ubuntu
   template:
     src: ntpconf_ubuntu.j2
     dest: /etc/ntpsec/ntp.conf

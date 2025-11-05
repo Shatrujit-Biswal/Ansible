@@ -1,16 +1,18 @@
----
-- name: Install "{{web_package}}"
+# Install Apache or Httpd based on OS
+- name: Install "{{ web_package }}"
   ansible.builtin.package:
     update_cache: yes
-    name: "{{web_package}}"
+    name: "{{ web_package }}"
     state: present
 
-- name: Start Apache "{{web_service}}"
+# Start and enable web service
+- name: Start "{{ web_service }}"
   ansible.builtin.service:
-    name: "{{web_service}}"
+    name: "{{ web_service }}"
     state: started
     enabled: yes
 
+# Deploy homepage template
 - name: Deploy index file
   ansible.builtin.template:
     src: "{{ web_index_template }}"
