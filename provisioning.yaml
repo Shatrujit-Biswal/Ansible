@@ -3,7 +3,7 @@
   hosts: all
   become: yes
   roles:
-    - post-install  # runs on all servers
+    - post-install 
 
 - name: Provision web servers
   hosts: webservers
