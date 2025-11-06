@@ -124,14 +124,6 @@ ansible-playbook provisioning.yaml
 - Installs and starts MariaDB
 - Installs PyMySQL
 - Creates DB and user
- ---
-
-## 🛡️ Security
-
-Sensitive files like SSH keys are ignored in `.gitignore`:
-```gitignore
-*.pem
-```
 
 ---
 
